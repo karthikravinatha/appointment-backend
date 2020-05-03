@@ -1,0 +1,12 @@
+SET GLOBAL EVENT_SCHEDULER = 'ON';
+
+DROP EVENT IF EXISTS EVENT;
+CREATE EVENT eClearLog
+  ON SCHEDULE
+    EVERY 1 DAY
+    STARTS '2020-04-01 00:20:00'
+  ON COMPLETION PRESERVE ENABLE
+  COMMENT 'Clears the Transaction Log logged before 30 days'
+DO
+  DELETE FROM tTransactionLog
+  WHERE Log_Date < date_add(curdate(), INTERVAL -30 DAY);

@@ -1,0 +1,19 @@
+#!/bin/bash
+echo "Starting..."
+
+BLACKLIST="information_schema performance_schema mysql sys KARO Master_DB KaHO_College"
+
+dblist=`mysql -uroot -pK@h0India -e "show databases" | sed -n '2,$ p'`
+for db in $dblist;
+do
+    isBl=`echo $BLACKLIST | grep $db`
+
+    if [ -z "$isBl" ]; then
+       sudo sh Run_Procs $db
+       echo "Routines are Created/Updated for $db"
+    else
+       echo "Database $db is on blacklist, skip"
+    fi
+done
+
+echo "Over!!"

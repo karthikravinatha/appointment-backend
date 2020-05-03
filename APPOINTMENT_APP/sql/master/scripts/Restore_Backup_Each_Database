@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ -z $1 ];then
+  echo "Started"
+  for DB in `mysql -uroot -pK@h0India -r --silent -e "select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME not in ('information_schema','mysql','performance_schema','phpmyadmin','questdebug','questsoftware');"`
+  do
+    gzip -d ${DB}.sql.gz
+    mysql -uroot -pK@h0India -e 'drop database if exists $DB;create database $DB;'
+    mysql -uroot -pK@h0India $DB < ${DB}.sql
+    gzip ${DB}.sql.gz
+    echo "$DB Over"
+  done
+  echo "Backup Restored Successfully"
+else
+  DB=$1
+  echo "Started"
+  gzip -d ${DB}.sql.gz
+  mysql -uroot -pK@h0India -e 'drop database if exists $DB;create database $DB;'
+  mysql -uroot -pK@h0India $DB < ${DB}.sql
+  gzip ${DB}.sql
+  echo "$DB Backup Successfully Restored"
+fi

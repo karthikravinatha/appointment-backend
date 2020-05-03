@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "Started"
+mysqldump -uroot -pK@h0India --routines  --triggers --all-databases | gzip > complete_backup.sql.gz
+echo "Backup Created as complete_backup"
+

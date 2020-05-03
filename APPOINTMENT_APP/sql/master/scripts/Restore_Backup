@@ -1,0 +1,7 @@
+#!/bin/bash
+echo "Started"
+gzip -d complete_backup.sql.gz
+mysql -uroot -pK@h0India < complete_backup.sql
+gzip complete_backup.sql.gz
+echo "Backup Restored successfully"
+

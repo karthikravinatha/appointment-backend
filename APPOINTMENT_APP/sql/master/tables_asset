@@ -1,0 +1,164 @@
+DROP TABLE IF EXISTS tLookUp;
+CREATE TABLE tLookUp
+(
+  Type_Code   VARCHAR(64)            NULL,
+  LookUp_Code VARCHAR(64) DEFAULT '' NOT NULL
+    PRIMARY KEY,
+  Description VARCHAR(264)           NULL,
+  Sort_Order  INT                    NULL
+);
+
+DROP TABLE IF EXISTS tLookUpType;
+CREATE TABLE tLookUpType
+(
+  Type_Code   VARCHAR(64)  NOT NULL
+    PRIMARY KEY,
+  Description VARCHAR(264) NULL
+);
+
+DROP TABLE IF EXISTS tObject;
+CREATE TABLE tObject
+(
+  Object_ID       INT      AUTO_INCREMENT PRIMARY KEY,
+  App_ID          VARCHAR(1024),
+  Object_Type     VARCHAR(1024) NOT NULL,
+  Created_By      VARCHAR(1024),
+  Created_On      DATETIME DEFAULT now(),
+  Is_Delete       INT      DEFAULT 0,
+  Applicable_From DATE     DEFAULT NULL,
+  Applicable_To   DATE     DEFAULT NULL
+);
+
+
+DROP TABLE IF EXISTS tDocument;
+CREATE TABLE tDocument
+(
+  Document_ID               INT           AUTO_INCREMENT PRIMARY KEY,
+  App_ID                    VARCHAR(1024),
+  Document_Type             VARCHAR(1024) NOT NULL,
+  Display_Name              VARCHAR(1024)
+                            CHARACTER SET utf8
+                            COLLATE utf8_unicode_ci,
+  Created_By                VARCHAR(1024) DEFAULT NULL,
+  Created_On                DATETIME      DEFAULT now(),
+  Type                      VARCHAR(1024) DEFAULT 'DOCANY',
+  Applicable_From           DATE          DEFAULT NULL,
+  Applicable_To             DATE          DEFAULT NULL,
+  Is_Multiple               INT           DEFAULT 1,
+  Is_Watermark_Logo_Enabled INT,
+  Default_Access_Bit        INT           DEFAULT 1111,
+  Is_Mandatory              INT           DEFAULT 0
+);
+
+
+DROP TABLE IF EXISTS tWatermarkDetail;
+CREATE TABLE tWatermarkDetail
+(
+  Document_ID INT           NOT NULL,
+  Object_Key  VARCHAR(1024) NOT NULL,
+  Position    ENUM ('TOPLEFT', 'TOPRIGHT', 'BOTTOMLEFT', 'BOTTOMRIGHT', 'CENTRE') DEFAULT 'BOTTOMLEFT',
+  Color       VARCHAR(1024)
+);
+
+DROP TABLE IF EXISTS tAppLogo;
+CREATE TABLE tAppLogo
+(
+  Logo_ID   INT AUTO_INCREMENT PRIMARY KEY,
+  App_ID    VARCHAR(1024) NOT NULL,
+  Logo_File VARCHAR(1024) NOT NULL
+);
+
+DROP TABLE IF EXISTS tObjectDocument;
+CREATE TABLE tObjectDocument
+(
+  Object_Document_ID        INT           AUTO_INCREMENT PRIMARY KEY,
+  Object_ID                 INT NOT NULL,
+  Document_ID               INT NOT NULL,
+  Type                      VARCHAR(1024) DEFAULT 'DOCANY',
+  Applicable_From           DATE          DEFAULT NULL,
+  Applicable_To             DATE          DEFAULT NULL,
+  Is_Multiple               INT           DEFAULT 1,
+  Is_Watermark_Logo_Enabled INT,
+  Default_Access_Bit        INT           DEFAULT 1111,
+  Is_Mandatory              INT           DEFAULT 0
+);
+
+
+DROP TABLE IF EXISTS tObjectDocumentRole;
+CREATE TABLE tObjectDocumentRole
+(
+  Object_Document_Role_ID INT AUTO_INCREMENT PRIMARY KEY,
+  Object_Document_ID      INT NOT NULL,
+  Role_ID                 INT NOT NULL,
+  Access_Bit              INT DEFAULT 1111
+);
+
+DROP TABLE IF EXISTS tFileResizeRatio;
+CREATE TABLE tFileResizeRatio
+(
+  Resize_Ratio_ID INT AUTO_INCREMENT PRIMARY KEY,
+  Height          INT NOT NULL,
+  Width           INT NOT NULL,
+  Obejct_ID       INT NOT NULL,
+  Document_ID     INT NOT NULL
+);
+
+-- Transaction
+
+DROP TABLE IF EXISTS tFileHeader;
+CREATE TABLE tFileHeader
+(
+  _ID             INT           AUTO_INCREMENT PRIMARY KEY,
+  Created_By      VARCHAR(1024) DEFAULT NULL,
+  Created_On      DATETIME      DEFAULT now(),
+  Last_Updated_On DATETIME      DEFAULT now(),
+  Transaction_ID  VARCHAR(1024) NOT NULL,
+  Object_ID       INT           NOT NULL,
+  Document_ID     INT           NOT NULL
+);
+
+DROP TABLE IF EXISTS tFileDetail;
+CREATE TABLE tFileDetail
+(
+  File_ID            INT AUTO_INCREMENT PRIMARY KEY,
+  Header_ID          INT NOT NULL,
+  File_Name          TEXT CHARACTER SET utf8
+                     COLLATE utf8_unicode_ci,
+  File_Original_Name TEXT CHARACTER SET utf8
+                     COLLATE utf8_unicode_ci,
+  Mime_Type          TEXT,
+  File_Size          BIGINT,
+  File_Link          TEXT CHARACTER SET utf8
+                     COLLATE utf8_unicode_ci
+);
+
+DROP TABLE IF EXISTS tFileDetailResize;
+CREATE TABLE tFileDetailResize
+(
+  File_Resize_ID  INT AUTO_INCREMENT PRIMARY KEY,
+  Resize_Ratio_ID INT NOT NULL,
+  File_ID         INT NOT NULL,
+  File_Name       TEXT CHARACTER SET utf8
+                  COLLATE utf8_unicode_ci,
+  File_Size       BIGINT
+);
+
+DROP TABLE IF EXISTS tFileDraft;
+CREATE TABLE tFileDraft
+(
+  Draft_ID           INT      AUTO_INCREMENT PRIMARY KEY,
+  Transaction_ID     VARCHAR(1024),
+  Object_ID          INT NOT NULL,
+  Document_ID        INT NOT NULL,
+  Created_By         VARCHAR(1024),
+  Created_On         DATETIME DEFAULT now(),
+  File_Name          TEXT CHARACTER SET utf8
+                     COLLATE utf8_unicode_ci,
+  File_Original_Name TEXT CHARACTER SET utf8
+                     COLLATE utf8_unicode_ci,
+  Mime_Type          TEXT,
+  File_Size          BIGINT,
+  File_Link          TEXT CHARACTER SET utf8
+                     COLLATE utf8_unicode_ci
+
+);

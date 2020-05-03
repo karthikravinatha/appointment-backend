@@ -1,0 +1,31 @@
+#!/bin/bash
+if [ -z $1 ]; then
+read -p "please enter the database" db
+if [ -z $db ]; then
+echo "please enter the db"
+exit;
+fi
+else
+db=$1
+fi
+# Create new database
+mysql -u root -pK@h0India  -e "DROP DATABASE IF EXISTS $db;CREATE DATABASE $db"
+# Create all the tables
+echo "Creating Tables"
+mysql -u root -pK@h0India  -D $db < DbScript.sql
+echo "Tables Created"
+# Create all the procedures and functions
+echo "Creating all the Procedures and Functions"
+sh proc.sh $db
+# Create Views
+echo "Creating Views"
+mysql -u root -pK@h0India  -D $db < View_Script.sql
+echo "Views Created"
+# Create KaHO Specific datas
+echo "Adding KaHO Specific datas"
+mysql -u root -pK@h0India  -D $db < KaHO_Specific.sql
+echo "Datas Added"
+echo "Creating Indexes"
+mysql -u root -pK@h0India  -D $db < Indexes.sql
+echo "Indexes Created"
+echo "Database" $db "Created"

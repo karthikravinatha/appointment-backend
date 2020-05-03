@@ -1,0 +1,12 @@
+#!/bin/bash
+if [ -z $1 ]; then
+  read -p "please enter the database" db
+if [ -z $db ]; then
+  echo "please enter the db"
+  exit;
+fi
+else
+  db=$1
+fi
+  mysql -uroot -pK@h0India  -D $db < truncate.sql
+echo "over"

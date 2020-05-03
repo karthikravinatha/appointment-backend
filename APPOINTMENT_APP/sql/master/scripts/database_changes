@@ -1,0 +1,8 @@
+#!/bin/bash
+for DB in `mysql -uroot -pK@h0India -r --silent -e "select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME not like '%group%' and 
+SCHEMA_NAME not in ('LOG_DB','information_schema','mysql','performance_schema','phpmyadmin','questdebug','questsoftware');"`
+do
+  mysql -uroot -pK@h0India $DB < changes.sql
+  echo $DB "Over"
+done 
+echo "Over"

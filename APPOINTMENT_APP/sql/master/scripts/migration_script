@@ -1,0 +1,28 @@
+#!/bin/bash
+
+BLACKLIST="information_schema performance_schema mysql sys"
+
+# Please make sure Master_DB has created before running this script
+
+dblist=`mysql -uroot -pK@h0India -e "show databases" | sed -n '2,$ p'`
+for db in $dblist;
+do
+  echo "Migration started for $db"
+  isBl=`echo $BLACKLIST | grep $db`
+  if [ -z "$isBl" ]; then
+    #Run Changes
+    mysql -uroot -pK@h0India $db < changes.sql
+    # Run views
+    sh Run_Views.sh $db
+    # Run Procedures
+    sh proc.sh $db
+
+    # Add User to Master database
+    mysql -uroot -pK@h0India -e"insert into Master_DB.tUsers(User_ID,Email,Phone,Password,School_Database) select User_Id,Email,Phone,Password,'${db}' from ${db}.tUser" 
+  else
+    echo "Database $db is on blacklist, skip"
+  fi
+done
+echo "Migration Completed"
+
+

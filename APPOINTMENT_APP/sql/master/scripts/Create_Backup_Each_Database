@@ -1,0 +1,15 @@
+#!/bin/bash
+if [ -z $1 ];then
+  echo "Started"
+  for DB in `mysql -uroot -pK@h0India -r --silent -e "select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME not in ('information_schema','mysql','performance_schema','phpmyadmin','questdebug','questsoftware');"`
+  do
+    mysqldump -uroot -pK@h0India --routines --triggers $DB | gzip > ${DB}.sql.gz
+    echo "$DB Over"
+  done
+  echo "Backup Successfully Created"  
+else
+  DB=$1
+  echo "Started"
+  mysqldump -uroot -pK@h0India --routines --triggers $DB | gzip > ${DB}.sql.gz
+  echo "Backup Successfully Created for $DB"  
+fi

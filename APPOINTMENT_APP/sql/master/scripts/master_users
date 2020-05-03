@@ -1,0 +1,8 @@
+#!/bin/bash
+for DB in `mysql -uroot -r --silent -e "select SCHEMA_NAME from INFORMATION_SCHEMA.SCHEMATA where SCHEMA_NAME not like '%group%' and 
+SCHEMA_NAME not in ('LOG_DB','Master_DB','Test_DB','information_schema','mysql','performance_schema','phpmyadmin','questdebug','questsoftware');"`
+do
+  mysql -uroot -e"insert into Master_DB.tUsers(User_ID,Email,Phone,Password,School_Database)select User_Id,Email,Phone,Password,'${DB}' from ${DB}.tUser"
+  echo $DB "over"
+done 
+echo "Over"

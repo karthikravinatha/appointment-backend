@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ -z $1 ]; then
+read -p "please enter the database name" db
+if [ -z $db ]; then
+echo "please enter the database name"
+exit;
+fi
+else
+db=$1
+fi
+
+mysqldbcopy --source=root:K@h0India@localhost --destination=root:K@h0India@localhost Empty_DB:$db
+
+echo 'Over'

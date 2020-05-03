@@ -1,0 +1,10 @@
+#!/bin/bash
+# Loop through all the database schemas excluding base databases like information_schema, mysql, performance_schema 
+for DB in `mysql -uroot -r --silent -e "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME NOT LIKE '%group%' 
+AND SCHEMA_NAME NOT IN ('LOG_DB','information_schema','mysql','performance_schema','phpmyadmin','questdebug','questsoftware')"`
+do
+    # Procedures and Functions
+    # Call proc.sh script to run all the procedures and functions
+    sh proc.sh $DB
+done
+echo "Over"
